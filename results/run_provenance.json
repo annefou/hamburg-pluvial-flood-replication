@@ -1,0 +1,92 @@
+{
+  "implementation": "FAIR2Adapt/urban_pfr_toolbox_hamburg",
+  "urban_pfr_version": "0.2.1",
+  "urban_pfr_source": {
+    "url": "https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg.git",
+    "vcs_info": {
+      "vcs": "git",
+      "commit_id": "afadc561c1f8cde9b5fe53618008a103231a735a",
+      "requested_revision": "afadc561c1f8cde9b5fe53618008a103231a735a"
+    }
+  },
+  "reference": {
+    "v2": "10.5281/zenodo.19860733",
+    "v1": "10.5281/zenodo.17986182"
+  },
+  "config": {
+    "project": {
+      "city_name": "vogelbacher2026_example",
+      "crs": "EPSG:3857",
+      "paths": {
+        "input_gdb": null,
+        "buildings": "../data/interim/pipeline_inputs/buildings.gpkg",
+        "statistical_units": "../data/interim/pipeline_inputs/statistical_units.gpkg",
+        "streets": "../data/interim/pipeline_inputs/streets.gpkg",
+        "flood_dir": "../data/interim/pipeline_inputs/Floodlevels",
+        "output_dir": "../data/interim/pipeline_run"
+      }
+    },
+    "topsis_granularity": "building",
+    "schema": {
+      "stat_unit_col": "StatisticalUnit",
+      "residents_col": "Residents",
+      "living_area_col": "LivingArea",
+      "floors_col": "Floors",
+      "building_type_col": "Building_type",
+      "sensitivity_fields": [
+        "ES",
+        "C"
+      ],
+      "coping_fields": [
+        "WR",
+        "EDQ"
+      ]
+    },
+    "hazard_settings": {
+      "hma_buffers": [
+        5,
+        15,
+        30
+      ],
+      "hwb_buffer": 2,
+      "flood_threshold": 0.3,
+      "flood_depths": [
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100
+      ],
+      "shape_param": 0.25,
+      "min_area_threshold": 0.0,
+      "hwb_clip_max": null
+    },
+    "risk_settings": {
+      "weight_hazard": 1.0,
+      "weight_exposure": 1.0,
+      "weight_vulnerability": 1.0,
+      "normalize_exposure": false
+    },
+    "topsis_weights": {
+      "sensitivity": [
+        0.7,
+        0.3
+      ],
+      "coping_capacity": [
+        0.5,
+        0.5
+      ],
+      "svi": [
+        0.5,
+        0.5
+      ]
+    },
+    "svpf_threshold": 0.25,
+    "svpf_transform": 2.0
+  },
+  "python": "3.12.13",
+  "geopandas": "1.2.0"
+}
