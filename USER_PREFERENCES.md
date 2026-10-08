@@ -32,7 +32,7 @@ If commits are showing as anonymous on GitHub: add the email at the link above, 
 ## Co-authoring trailer
 
 ```yaml
-add_co_authored_by_claude_trailer: false
+add_co_authored_by_claude_trailer: true
 ```
 
 When `false` (default), commit messages do not append `Co-Authored-By: Claude …`. This is the recommended default because GitHub's contributor widget treats the trailer as a real co-author and will list `claude` (github.com/claude) alongside you in the repo's Contributors panel — accurate but visually noisy for a one-human project.

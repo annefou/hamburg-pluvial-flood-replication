@@ -48,9 +48,21 @@ snakemake = "*"
 # rasterio = "*"             # raster I/O
 # geopandas = "*"            # vector I/O
 # dask = "*"                 # out-of-core / parallel
+# --- this replication ---
+geopandas = "*"            # vector I/O (buildings, flood layers, streets)
+fiona = "*"
+shapely = "*"
+pyogrio = "*"
+pyyaml = "*"
+requests = "*"
+py7zr = "*"                # the Zenodo ArcGIS layer package (.lpkx) is a 7-zip archive
+openpyxl = "*"
 
 # Pip-only deps go in [pypi-dependencies]. Conda-forge is preferred where available.
-# [pypi-dependencies]
+[pypi-dependencies]
+# The open implementation under test: FAIR2Adapt urban_pfr_toolbox_hamburg, pinned to
+# the tip of feature/v3-paper-scientific-validation (PR #1 merges it into main).
+urban-pfr = { git = "https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg.git", rev = "afadc561c1f8cde9b5fe53618008a103231a735a" }
 # pygbif = "*"               # GBIF occurrences
 # polytope-client = "*"      # Destination Earth Climate DT
 # earthkit-data = "*"
