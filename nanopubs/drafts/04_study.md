@@ -27,12 +27,13 @@ Independent open reproduction of building-level pluvial flood risk (Vogelbacher 
 <!-- field: type -->
 ### Choose the study type (dropdown, required)
 
-- [ ] Replication Study - replication with different methodology or conditions
-- [ ] Reproduction/Replication Study - study that is both, reproduction and replication
-- [x] Reproduction Study - direct reproduction: same methodology, same tools
 
 *Rationale (Anne, 2026-10-09): same data and same method as the paper; the tools
 differ (open Python instead of ArcGIS), which is stated as deviation (1).*
+
+- [ ] Replication Study - replication with different methodology or conditions
+- [ ] Reproduction/Replication Study - study that is both, reproduction and replication
+- [x] Reproduction Study - direct reproduction: same methodology, same tools
 
 <!-- field: claim -->
 ### Choose FORRT claim (search/select, required)
