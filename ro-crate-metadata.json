@@ -89,10 +89,10 @@
         }
       ],
       "identifier": [
-        "https://doi.org/10.5281/zenodo.23270412",
-        "swh:1:rev:ec14e7a372d7f48b4cb4cdeb88633563b1bdc690;origin=https://github.com/annefou/hamburg-pluvial-flood-replication"
+        "https://doi.org/10.5281/zenodo.23270558",
+        "swh:1:rev:dbdb9dc8b2ee1df0d039e9b20e2dec589bbfc177;origin=https://github.com/annefou/hamburg-pluvial-flood-replication"
       ],
-      "version": "0.1.0"
+      "version": "0.1.1"
     },
     {
       "@id": "https://orcid.org/0000-0002-1784-2920",

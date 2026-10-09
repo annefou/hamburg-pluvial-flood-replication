@@ -10,8 +10,8 @@
   "codeRepository": "https://github.com/annefou/hamburg-pluvial-flood-replication",
   "identifier": [
     "https://doi.org/10.5281/zenodo.23270411",
-    "https://doi.org/10.5281/zenodo.23270412",
-    "swh:1:rev:ec14e7a372d7f48b4cb4cdeb88633563b1bdc690;origin=https://github.com/annefou/hamburg-pluvial-flood-replication"
+    "https://doi.org/10.5281/zenodo.23270558",
+    "swh:1:rev:dbdb9dc8b2ee1df0d039e9b20e2dec589bbfc177;origin=https://github.com/annefou/hamburg-pluvial-flood-replication"
   ],
   "@id": "https://doi.org/10.5281/zenodo.23270411",
   "programmingLanguage": {
