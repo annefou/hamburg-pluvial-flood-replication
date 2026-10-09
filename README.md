@@ -69,7 +69,18 @@ The pipeline downloads both versions of the authors' Zenodo deposit (checksums v
 
 ## FORRT nanopublication chain
 
-Quote → AIDA → FORRT Claim → Reproduction Study → Outcome → CiTO citation, drafted field by field in [`nanopubs/drafts/`](nanopubs/drafts/); published URIs go in [`nanopubs/PUBLISHED.md`](nanopubs/PUBLISHED.md).
+Published on the [Science Live platform](https://platform.sciencelive4all.org) on 2026-10-09 (verified green):
+
+| Step | Nanopublication |
+|---|---|
+| Quote | [RA2rRZOL…](https://w3id.org/sciencelive/np/RA2rRZOLe5fhat4AghXzq0ymDP71nR_miJ9iljUnaaaD4) |
+| AIDA | [RAg-Em1_…](https://w3id.org/sciencelive/np/RAg-Em1_q5H25bdX0zkQD_AAXnZQjII3j_XnQ7aGKp-dg) |
+| FORRT claim | [RA5O9-MZ…](https://w3id.org/sciencelive/np/RA5O9-MZKGMZtWNCZcu00QtpwW-wOE6MtX8YDXMPvh5GY) |
+| Reproduction study | [RAwD-DCU…](https://w3id.org/sciencelive/np/RAwD-DCUir9JDcqk8lQkRnT91aRGfRZ_p2N7j_uQ9mBw0) |
+| Outcome — **Validated** | [RA6V_jAy…](https://w3id.org/sciencelive/np/RA6V_jAy2OFjYBwQMOH92fIM6199bjez7hRkY90vkxx7U) |
+| CiTO — **confirms** the paper | [RAI00BYT…](https://w3id.org/sciencelive/np/RAI00BYTAPLTsNoY19DGNKF04vAjTuVv6K3WbYmo055CA) |
+
+Full registry: [`nanopubs/PUBLISHED.md`](nanopubs/PUBLISHED.md); field-by-field drafts: [`nanopubs/drafts/`](nanopubs/drafts/).
 
 ## Credits
 
