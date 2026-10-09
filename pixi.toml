@@ -61,8 +61,8 @@ openpyxl = "*"
 # Pip-only deps go in [pypi-dependencies]. Conda-forge is preferred where available.
 [pypi-dependencies]
 # The open implementation under test: FAIR2Adapt urban_pfr_toolbox_hamburg, pinned to
-# the tip of feature/v3-paper-scientific-validation (PR #1 merges it into main).
-urban-pfr = { git = "https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg.git", rev = "afadc561c1f8cde9b5fe53618008a103231a735a" }
+# main after PR #1 (v3 merged, 2026-10-09); urban_pfr/ is identical to afadc561.
+urban-pfr = { git = "https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg.git", rev = "eb651ebf3b38f444d0180af0a95807bc00326015" }
 # pygbif = "*"               # GBIF occurrences
 # polytope-client = "*"      # Destination Earth Climate DT
 # earthkit-data = "*"

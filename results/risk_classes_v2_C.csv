@@ -1,0 +1,3 @@
+field,breaks_ref,breaks_ours,same_class,n,counts_ref,counts_ours
+PFR_WB,"[2.8761, 10.0295, 15.52]","[2.8762, 10.0301, 15.5207]",37,37,"{'no risk': 15, 'low': 13, 'medium': 5, 'high': 3, 'very high': 1}","{'no risk': 15, 'low': 13, 'medium': 5, 'high': 3, 'very high': 1}"
+PFR_MA,"[3.6873, 15.2124, 29.6852]","[3.6867, 15.2107, 29.681]",37,37,"{'no risk': 6, 'low': 23, 'medium': 5, 'high': 2, 'very high': 1}","{'no risk': 6, 'low': 23, 'medium': 5, 'high': 2, 'very high': 1}"
