@@ -8,14 +8,21 @@
   "dateModified": "2026-10-08",
   "license": "https://spdx.org/licenses/MIT",
   "codeRepository": "https://github.com/annefou/hamburg-pluvial-flood-replication",
-  "identifier": "{{ZENODO_DOI}}",
-  "@id": "{{ZENODO_DOI}}",
+  "identifier": [
+    "https://doi.org/10.5281/zenodo.23270411",
+    "https://doi.org/10.5281/zenodo.23270412",
+    "swh:1:rev:ec14e7a372d7f48b4cb4cdeb88633563b1bdc690;origin=https://github.com/annefou/hamburg-pluvial-flood-replication"
+  ],
+  "@id": "https://doi.org/10.5281/zenodo.23270411",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "Python",
     "version": "3.12"
   },
-  "operatingSystem": ["Linux", "macOS"],
+  "operatingSystem": [
+    "Linux",
+    "macOS"
+  ],
   "author": [
     {
       "@type": "Person",

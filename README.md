@@ -4,7 +4,7 @@
 [![Jupyter Book](https://github.com/annefou/hamburg-pluvial-flood-replication/actions/workflows/jupyter-book.yml/badge.svg)](https://annefou.github.io/hamburg-pluvial-flood-replication/)
 [![Docker](https://github.com/annefou/hamburg-pluvial-flood-replication/actions/workflows/docker.yml/badge.svg)](https://github.com/annefou/hamburg-pluvial-flood-replication/pkgs/container/hamburg-pluvial-flood-replication)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![DOI](https://zenodo.org/badge/DOI/{{ZENODO_DOI}}.svg)]({{ZENODO_DOI}})
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23270411.svg)](https://doi.org/10.5281/zenodo.23270411)
 [![FAIR4RS](https://img.shields.io/badge/FAIR4RS-conformant-brightgreen)](docs/fair4rs-checklist.md)
 [![FORRT](https://img.shields.io/badge/FORRT-replication-blue)](https://forrt.org/)
 [![Science Live](https://img.shields.io/badge/Science%20Live-nanopub%20chain-purple)](nanopubs/PUBLISHED.md)
@@ -79,7 +79,7 @@ Quote → AIDA → FORRT Claim → Reproduction Study → Outcome → CiTO citat
 
 ## Citation
 
-Please cite both this reproduction ([`CITATION.cff`](CITATION.cff), DOI [{{ZENODO_DOI}}]({{ZENODO_DOI}})) and the original paper ([10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026)).
+Please cite both this reproduction ([`CITATION.cff`](CITATION.cff), DOI [10.5281/zenodo.23270411](https://doi.org/10.5281/zenodo.23270411)) and the original paper ([10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026)).
 
 ## Built from a template
 
