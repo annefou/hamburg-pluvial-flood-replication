@@ -57,10 +57,10 @@ phrase here. Leave empty for a single short quote.
 Why this quote matters and what the replication tests. Connect the paper's claim to the work this repo does. Don't repeat the quote.
 
 ```
-Headline result of Vogelbacher et al. (2026) for their building-level pluvial flood risk framework. We test it as a computational reproduction: the authors' own example (synthetic data for a Hamburg city quarter, 37 buildings, Zenodo 10.5281/zenodo.19860733) recomputed with an open, non-ArcGIS implementation (FAIR2Adapt urban_pfr toolbox), and compared building by building with the authors' ArcGIS output and risk classes. Scope is that example only: not real city data, other cities or other rainfall scenarios. I co-wrote parts of that toolbox, so the reproduction is not fully independent.
+Headline result of Vogelbacher et al. (2026) for their building-level pluvial flood risk framework. We test it as a computational reproduction: the authors' own example (synthetic data for a Hamburg city quarter, 37 buildings, Zenodo 10.5281/zenodo.19860733) recomputed with an independent open implementation, written from the paper and the authors' scripts instead of ArcGIS, and compared building by building with the authors' ArcGIS output and risk classes. Scope is that example only: not real city data, other cities or other rainfall scenarios.
 ```
 
-Character count: 595 / 800.
+Character count: 551 / 800.
 
 ## Publication note
 
