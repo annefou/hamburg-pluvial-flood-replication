@@ -315,10 +315,13 @@ def risk_class(values, breaks) -> np.ndarray:
 CLASS_NAMES = ["no risk", "low", "medium", "high", "very high"]
 c_v2 = pd.read_csv(RESULTS / "per_building_v2_C_authors_ring_rule.csv")
 class_rows = []
+per_building_classes = pd.DataFrame({"ID": c_v2["ID"].astype(int)})
 for field in ("PFR_WB", "PFR_MA"):
     ref_v, ours_v = c_v2[f"{field}_ref"], c_v2[f"{field}_port"]
     br_ref, br_ours = iterated_means(ref_v), iterated_means(ours_v)
     cls_ref, cls_ours = risk_class(ref_v, br_ref), risk_class(ours_v, br_ours)
+    per_building_classes[f"{field}_class_ref"] = cls_ref
+    per_building_classes[f"{field}_class_ours"] = cls_ours
     class_rows.append({
         "field": field, "breaks_ref": [round(x, 4) for x in br_ref],
         "breaks_ours": [round(x, 4) for x in br_ours],
@@ -328,6 +331,7 @@ for field in ("PFR_WB", "PFR_MA"):
     })
 classes = pd.DataFrame(class_rows)
 classes.to_csv(RESULTS / "risk_classes_v2_C.csv", index=False)
+per_building_classes.to_csv(RESULTS / "risk_classes_per_building_v2_C.csv", index=False)
 print(classes[["field", "same_class", "n", "breaks_ref", "breaks_ours"]].to_string(index=False))
 
 # %% [markdown]
@@ -351,13 +355,15 @@ b3857 = gpd.read_file(src, layer="buildings").to_crs("EPSG:3857")
 ring_own = b3857.geometry.buffer(2).difference(b3857.geometry)
 ring_all = rings_without_buildings(b3857.geometry, 2)
 lat = b3857.to_crs("EPSG:4326").geometry.centroid.y.mean()
-evidence = []
+evidence, cells = [], []
 for d in DEPTHS:
     fl = unary_union(gpd.read_file(src, layer=f"flood_{d}").to_crs("EPSG:3857").geometry.values)
     p_ref = v1_ref.set_index("ID").loc[b3857["ID"].astype(int), f"P2Flood_{d}"].fillna(0).values
     a_ref = v1_ref.set_index("ID").loc[b3857["ID"].astype(int), f"A2Flood_{d}"].fillna(0).values
     for rule, ring in (("own footprint", ring_own), ("all footprints", ring_all)):
         p = flooded_fraction(ring, fl) * 100
+        cells.append(pd.DataFrame({"ID": b3857["ID"].astype(int).values, "depth_cm": d,
+                                   "ring_rule": rule, "fraction_ours": p, "fraction_authors": p_ref}))
         evidence.append({"depth_cm": d, "ring_rule": rule,
                          "max_abs_diff_pct_points": float(np.abs(p - p_ref).max()),
                          "cells_off_by_more_than_0.5": int((np.abs(p - p_ref) > 0.5).sum())})
@@ -366,6 +372,7 @@ for d in DEPTHS:
     evidence[-1]["area_ratio_3857_over_authors"] = float(np.median(wet[ok] / a_ref[ok])) if ok.any() else np.nan
 evidence = pd.DataFrame(evidence)
 evidence.to_csv(RESULTS / "ring_rule_evidence.csv", index=False)
+pd.concat(cells).to_csv(RESULTS / "ring_rule_cells.csv", index=False)
 print(f"Web Mercator area scale 1/cos^2(lat) at lat {lat:.3f}: {1 / np.cos(np.radians(lat)) ** 2:.4f}")
 print(evidence.groupby("ring_rule")[["max_abs_diff_pct_points", "cells_off_by_more_than_0.5"]]
       .agg({"max_abs_diff_pct_points": "max", "cells_off_by_more_than_0.5": "sum"}).round(4).to_string())
