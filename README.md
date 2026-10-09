@@ -1,4 +1,4 @@
-# hamburg-pluvial-flood-replication
+# Independent reproduction of building-level urban pluvial flood risk (Vogelbacher et al. 2026)
 
 [![CI](https://github.com/annefou/hamburg-pluvial-flood-replication/actions/workflows/ci.yml/badge.svg)](https://github.com/annefou/hamburg-pluvial-flood-replication/actions/workflows/ci.yml)
 [![Jupyter Book](https://github.com/annefou/hamburg-pluvial-flood-replication/actions/workflows/jupyter-book.yml/badge.svg)](https://annefou.github.io/hamburg-pluvial-flood-replication/)
@@ -11,14 +11,45 @@
 [![RO-Crate](https://img.shields.io/badge/RO--Crate-1.2-orange)](ro-crate-metadata.json)
 [![Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/annefou/hamburg-pluvial-flood-replication/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/annefou/hamburg-pluvial-flood-replication)
 
-> **A high-resolution framework for urban pluvial flood risk mapping** — replication study.
-> Reference paper: [10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026)
+> **Reproduced paper:** Vogelbacher, A., von Szombathely, M., Lennartz, M., Poschlod, B. and Sillmann, J. (2026).
+> *A high-resolution framework for urban pluvial flood risk mapping.* Natural Hazards and Earth System Sciences 26, 2765–2783.
+> [doi:10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026)
 
-This is a self-contained replication of the headline claim of the reference paper. It produces a reproducible computational pipeline, a Zenodo-archived release with a citable DOI, and a FORRT-tagged nanopublication chain on the [Science Live platform](https://platform.sciencelive4all.org).
+This is a FORRT computational reproduction. The paper computes building-level pluvial flood risk (social vulnerability × exposure × hazard, following the IPCC risk concept) in ArcGIS Pro and demonstrates it on a synthetic example for a Hamburg city quarter (37 buildings). Its authors published the example data, the toolbox and the ArcGIS output on Zenodo ([10.5281/zenodo.19860733](https://doi.org/10.5281/zenodo.19860733), CC BY 4.0).
 
----
+Here the whole calculation is redone with an **independent open Python implementation**, written from the paper and the authors' exported scripts, and compared building by building with the authors' ArcGIS output.
 
-## Quick start
+## Result
+
+![Authors' risk against this reproduction, per building](figures/main_result.png)
+
+| Compared with the authors' ArcGIS output (37 buildings) | Largest difference |
+|---|---|
+| Sensitivity, coping capacity, social vulnerability, transformed social vulnerability | 4.4e-16 (exact) |
+| Exposure (residents per building and per ground floor) | taken as published |
+| Hazard to mobility / to well-being | 0.0008 / 0.0016 |
+| Risk to mobility / to well-being | 0.013 / 0.004 |
+| **Risk classes** (no risk → very high), both risk indices | **37 / 37 buildings identical** |
+
+The paper's maps are reproduced exactly ([`figures/risk_class_maps.png`](figures/risk_class_maps.png)). The remaining differences, in the fourth decimal, are at the level of ArcGIS's geometry processing.
+
+**Verdict: Validated** — the paper's building-level risk and its pattern (highest where high exposure and high hazard coincide) are reproduced on the authors' example.
+
+### What the reproduction had to infer
+
+Three details differ between the paper's text and the authors' results or scripts; the reproduction follows the results:
+
+1. **Sensitivity weights.** The results need children 0.3 and elderly singles 0.7 (as in Eq. 2); the text of Sect. 3.1.1 gives 0.7 and 0.3.
+2. **TOPSIS normalisation.** The authors' scripts divide by the square root of the sum of squares; Eq. 4 shows the sum.
+3. **Hazard rings.** The 2 m and 5 m rings around a building exclude *every* building footprint, not only the building's own ([`figures/ring_rule.png`](figures/ring_rule.png)): the authors' stored intermediate fractions match within 0.05 percentage points this way, against up to 27.8 points otherwise.
+
+Scope: one synthetic city-quarter example and one rainfall scenario, as published. Other cities, real city data and the paper's sensitivity analysis are not tested.
+
+### An existing open implementation, for comparison
+
+The FAIR2Adapt [`urban_pfr` toolbox](https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg) is also run as is (scenarios A and B in [`notebooks/03_analysis.py`](notebooks/03_analysis.py)). It reproduces social vulnerability exactly but not the risk, because it recomputes exposure by disaggregation and keeps neighbouring footprints in the hazard rings (reported in its [issue #2](https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg/issues/2)). It is not used for the reproduced results.
+
+## Run it
 
 ```bash
 git clone https://github.com/annefou/hamburg-pluvial-flood-replication.git
@@ -27,98 +58,31 @@ pixi install
 pixi run snakemake --cores 1
 ```
 
-(Pixi resolves `pixi.toml` against the per-platform `pixi.lock`, installs the env under `.pixi/`, and provides `pixi run` for any task without needing an `activate` step.)
+The pipeline downloads both versions of the authors' Zenodo deposit (checksums verified), unpacks the ArcGIS layer package, runs the analysis and writes `results/` and `figures/`. The Jupyter Book version is at <https://annefou.github.io/hamburg-pluvial-flood-replication/>.
 
-Or with Docker:
+| Notebook | Does |
+|---|---|
+| [`01_data_download.py`](notebooks/01_data_download.py) | Fetches Zenodo v2 (reference) and v1 (intermediates), verifies MD5 |
+| [`02_data_clean.py`](notebooks/02_data_clean.py) | Unpacks the ArcGIS layer packages into GeoPackages |
+| [`03_analysis.py`](notebooks/03_analysis.py) | Independent implementation (scenario C) and the toolbox comparison (A, B); risk classes; ring-rule evidence |
+| [`04_figures.py`](notebooks/04_figures.py) | The three figures |
 
-```bash
-docker run --rm ghcr.io/annefou/hamburg-pluvial-flood-replication:latest
-```
+## FORRT nanopublication chain
 
-The Jupyter Book version is at <https://annefou.github.io/hamburg-pluvial-flood-replication/>.
+Quote → AIDA → FORRT Claim → Reproduction Study → Outcome → CiTO citation, drafted field by field in [`nanopubs/drafts/`](nanopubs/drafts/); published URIs go in [`nanopubs/PUBLISHED.md`](nanopubs/PUBLISHED.md).
 
-## Built from a template
+## Credits
 
-This repository was created from [`sciencelivehub/forrt-replication-template`](https://github.com/sciencelivehub/forrt-replication-template). The template ships an operating manual for AI assistants ([`CLAUDE.md`](CLAUDE.md), [`AGENTS.md`](AGENTS.md)), domain conventions ([`DOMAIN.md`](DOMAIN.md)), and reference docs (`docs/`) so that an AI working only inside this repository can guide a researcher from "paper PDF + GitHub repo" to "published FORRT chain + Zenodo DOI" with no other context.
-
-If you are reading this in a fresh fork, run [`/init-template`](.claude/skills/init-template/SKILL.md) inside Claude Code to substitute the placeholder tokens with your details. (For other AI tools, see [`docs/ai-portability.md`](docs/ai-portability.md).)
-
-After `/init-template`, do these one-time setup steps to enable the full CI/CD path:
-
-- **Enable GitHub Pages** at *Settings → Pages → Source: GitHub Actions*. Until enabled, the Jupyter Book build runs but the deploy step is skipped (CI stays green).
-- All three workflows share one **readiness guard** (`.github/actions/check-ready`). Before `/init-template` runs, the `.template-uninitialised` sentinel makes them skip with an informative `::notice::` (badges stay green); `/init-template` deletes the sentinel, which activates them. They also skip while `notebooks/*.py` are still scaffolds (Phase 2). **Once you've published a nanopub chain** (real URIs in `nanopubs/PUBLISHED.md`), a skip is treated as a bug and **fails the run loudly** — so a finished replication can't sit on silently-green-but-empty CI.
-
-## Repository structure
-
-```
-.
-├── CLAUDE.md / AGENTS.md       # operating manual for AI assistants
-├── DOMAIN.md                   # domain flavour (current: biodiversity + earth observation)
-├── USER_PREFERENCES.md         # per-user style (edit on first clone)
-├── README.md                   # this file
-├── LICENSE                     # MIT
-├── CITATION.cff                # how to cite
-├── codemeta.json               # software metadata (CodeMeta-2.0)
-├── ro-crate-metadata.json      # research object packaging (RO-Crate 1.2)
-├── pixi.toml + pixi.lock       # pinned dependencies (single source of truth; lockfile is per-platform)
-├── Dockerfile                  # container build
-├── Snakefile                   # pipeline orchestration
-├── myst.yml + index.md         # Jupyter Book scaffold
-├── paper/                      # the source paper PDF
-├── data/                       # downloaded artefacts (gitignored)
-├── notebooks/                  # jupytext .py pipeline (01–04)
-├── nanopubs/                   # FORRT chain drafts + published-URI registry
-├── docs/                       # reference material
-├── figures/                    # curated figures used in the Jupyter Book
-├── .github/workflows/          # CI, Jupyter Book, Docker
-└── .claude/                    # Claude Code agents, skills, sandbox config
-```
-
-## What you get
-
-This template bakes in conventions that took multiple replications to discover. By using it, you inherit:
-
-- **FAIR4RS conformance** — see [`docs/fair4rs-checklist.md`](docs/fair4rs-checklist.md) for the principle-by-principle mapping.
-- **Self-contained data downloads** — the first notebook fetches everything; no manual data prep.
-- **`pixi.toml` + `pixi.lock` as single source of truth** — local dev, Docker, and CI all install the same per-platform-pinned env.
-- **`prefix-dev/setup-pixi`-based CI** — caches the env, runs the pipeline with `pixi run`, executes notebooks via a glob, fails fast on a stale lockfile.
-- **Jupyter Book deployment** — auto-deploys to GitHub Pages with `BASE_URL` set correctly. (Don't put `base_url` in `myst.yml` — MyST silently ignores it.)
-- **Docker + GHCR + Zenodo image archival** — `release` trigger pushes to GHCR and (optionally) archives to Zenodo for long-term preservation.
-- **RO-Crate packaging** — the entire repo is a navigable Research Object via `ro-crate-metadata.json` (Process Run Crate + Workflow RO-Crate profiles).
-- **Six-step FORRT chain workspace** — `nanopubs/drafts/` has a field-by-field skeleton for each step. `nanopubs/PUBLISHED.md` is the URI registry.
-- **Layered AI guidance** — `CLAUDE.md` (universal) + `DOMAIN.md` (swappable per field) + `USER_PREFERENCES.md` (per-user). See [`docs/ai-portability.md`](docs/ai-portability.md) for non-Claude AI tools.
-- **Sandbox by default** — `.claude/settings.json` denies file ops outside the repo, so a fresh AI session can't accidentally read `~/.ssh/` or write to `/etc/`.
-
-## The six FORRT chain steps
-
-A complete FORRT chain has six steps published on [platform.sciencelive4all.org](https://platform.sciencelive4all.org):
-
-```
-Quote-with-comment  →  AIDA  →  FORRT Claim  →  Replication Study  →  Replication Outcome  →  CiTO Citation
-```
-
-(For question-rooted chains with no upstream paper, replace step 1 with PICO or PCC. See [`docs/chain-decision-tree.md`](docs/chain-decision-tree.md).)
-
-Drafts live in [`nanopubs/drafts/`](nanopubs/drafts/) field-by-field. Published URIs go into [`nanopubs/PUBLISHED.md`](nanopubs/PUBLISHED.md).
-
-Optional further layers:
-
-- **Research Software nanopub** — for reusable upstream tools (not demo repos). See [`docs/forrt-form-fields.md`](docs/forrt-form-fields.md) § Research Software.
-- **Research Synthesis nanopub** — when this chain is part of a multi-chain story. See [`docs/forrt-form-fields.md`](docs/forrt-form-fields.md) § Research Synthesis.
-
-## After publishing
-
-When the chain is live and the FAIR4RS checklist is green, drafting an announcement post is the next step. See [`docs/announcement-template.md`](docs/announcement-template.md) for the structural template (vision-piece-first; the worked replication is the payoff, not the lead).
-
-For lower-level nanopub work — retraction, superseding, batch publishing — see [`docs/programmatic-nanopubs.md`](docs/programmatic-nanopubs.md).
+- **Paper, method, data and ArcGIS toolbox:** Anastasia Vogelbacher, Malte von Szombathely, Marc Lennartz, Benjamin Poschlod, Jana Sillmann ([paper](https://doi.org/10.5194/nhess-26-2765-2026); Zenodo [v2](https://doi.org/10.5281/zenodo.19860733), [v1](https://doi.org/10.5281/zenodo.17986182)).
+- **FAIR2Adapt `urban_pfr` toolbox (comparison):** Esteban González, Zakieh Alizadehsani, José A. Zaino, Sonja Spälter, Anne Fouilloux.
+- **This reproduction:** Anne Fouilloux (LifeWatch ERIC), with Claude (Anthropic) as coding assistant.
 
 ## Citation
 
-If you use this work, please cite both:
+Please cite both this reproduction ([`CITATION.cff`](CITATION.cff), DOI [{{ZENODO_DOI}}]({{ZENODO_DOI}})) and the original paper ([10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026)).
 
-- This software: [`CITATION.cff`](CITATION.cff) → DOI [{{ZENODO_DOI}}]({{ZENODO_DOI}})
-- The original paper: [10.5194/nhess-26-2765-2026](https://doi.org/10.5194/nhess-26-2765-2026)
+## Built from a template
 
-## Acknowledgements
+Created from [`sciencelivehub/forrt-replication-template`](https://github.com/sciencelivehub/forrt-replication-template), part of the [Science Live platform](https://platform.sciencelive4all.org). The operating manual for AI assistants is in [`CLAUDE.md`](CLAUDE.md) and [`AGENTS.md`](AGENTS.md); reference docs are in [`docs/`](docs/).
 
-This repository was built from [`sciencelivehub/forrt-replication-template`](https://github.com/sciencelivehub/forrt-replication-template), part of the [Science Live platform](https://platform.sciencelive4all.org). The template is licensed MIT and contributions (especially new domain flavours under [`docs/domain-flavours/`](docs/domain-flavours/)) are welcome.
+Licence: MIT.

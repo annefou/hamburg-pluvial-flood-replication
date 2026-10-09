@@ -12,7 +12,7 @@
 Slug becomes part of the nanopub URI. Use kebab-case.
 
 ```
-
+pluvial-flood-risk-exposure-hazard-coincidence
 ```
 
 <!-- field: label -->
@@ -21,13 +21,14 @@ Slug becomes part of the nanopub URI. Use kebab-case.
 A descriptive title (not a sentence). Used for searches/discovery.
 
 ```
-
+Building-level pluvial flood risk highest where exposure and flood hazard coincide
 ```
 
 <!-- field: aida -->
 ### Search for an AIDA sentence (search/select, required)
 
 URI of the AIDA published in step 02. Pull from `nanopubs/PUBLISHED.md`.
+Left empty here: the chain wizard carries the step-02 URI forward.
 
 > _If the AIDA was published via Nanodash (`w3id.org/np/...` namespace), the platform's search may not find it — paste the URI manually._
 
@@ -40,10 +41,16 @@ URI of the AIDA published in step 02. Pull from `nanopubs/PUBLISHED.md`.
 
 Pick one. See `docs/claim-type-vocabulary.md` for the seven options and how to choose.
 
+
+*Rationale: the claim is a pattern in where risk falls (buildings close to flooded areas
+and streets, where exposure and hazard coincide); the risk index is the instrument, not
+the claim — the "descriptive pattern vs. model performance" rule in
+`docs/claim-type-vocabulary.md`. There is no statistical test in the paper.*
+
 - [ ] computational performance (Computational & Performance)
 - [ ] data governance (access control, licensing, FAIR compliance)
 - [ ] data quality (preprocessing, validation, normalization)
-- [ ] descriptive pattern (distribution, trend, proportion)
+- [x] descriptive pattern (distribution, trend, proportion)
 - [ ] model performance (accuracy, F1 score, evaluation metrics)
 - [ ] scalability (Computational & Performance)
 - [ ] statistical significance (significant difference, relationship, or effect)

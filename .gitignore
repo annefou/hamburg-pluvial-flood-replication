@@ -54,6 +54,7 @@ reference/
 
 # Results — large numerical outputs (commit only summary CSVs you reference in figures)
 results/raw/
+results/logs/
 
 # Docker
 docker-image.tar.gz
