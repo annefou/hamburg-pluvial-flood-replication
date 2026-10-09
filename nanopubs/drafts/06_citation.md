@@ -10,6 +10,7 @@
 ### Identifier for the citing creative work (text input, required)
 
 URI of the Outcome published in step 05. Pull from `nanopubs/PUBLISHED.md`.
+Left empty here: the chain wizard carries the step-05 URI forward.
 
 ```
 
@@ -33,8 +34,10 @@ Write the chosen type in the block below (a vocabulary label such as `cites as a
 
 > **Note:** `replicates` is NOT in the Science Live dropdown (despite existing in upstream CiTO). When citing a notebook/tutorial that was directly reused, use **`credits`** instead.
 
-```
+Outcome = Validated → `confirms`.
 
+```
+confirms
 ```
 
 ##### DOI or other URL of the cited work (text input)
@@ -49,7 +52,16 @@ If the Outcome cites methods papers, related replications, or upstream tools, ad
 
 One line per further citation, in this exact form (each becomes a pre-filled row):
 
-- _Type: ___ → URL: ___
+- Type: citesAsDataSource → URL: https://doi.org/10.5281/zenodo.19860733
+- Type: citesAsDataSource → URL: https://doi.org/10.5281/zenodo.17986182
+- Type: citesAsRelated → URL: https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg/tree/eb651ebf3b38f444d0180af0a95807bc00326015
+
+  (Zenodo v2: the authors' example data, ArcGIS output layer and scripts — the reference.
+  Zenodo v1: the authors' earlier deposit, whose stored intermediate fractions are the
+  evidence for the ring rule. Both resolve, `resolve_doi` 2026-10-09.)
+
+  (The FAIR2Adapt toolbox is cited at the exact commit that was run, because it has no
+  release or DOI yet; it is a comparison, not part of the reproduction.)
 
 ## Publication note
 
