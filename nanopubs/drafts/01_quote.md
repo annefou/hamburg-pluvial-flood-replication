@@ -30,15 +30,15 @@ Format: starts with `10.` — bare DOI, **NOT** `https://doi.org/...` form.
 <!-- field: quotation -->
 ### The exact quotation from the paper (max. 500 characters) (textarea, required)
 
-Verbatim from the paper PDF in `paper/`. Character-for-character. ≤ 500 chars in whole-text mode.
-
-> _Read the PDF first. Don't paraphrase from memory. See `docs/verify-before-drafting.md`._
-
-```
+Verbatim from `paper/vogelbacher-2026.pdf`, p. 10 (Sect. 4.2, Risk to mobility and accessibility).
+`verify_quote` → found, match `normalized` (whitespace / line-break hyphenation only),
+pdf sha256 `88121b0e…a7d5`.
 
 ```
+The application of the pluvial flood risk toolbox revealed higher risks for buildings in close vicinity to flooded areas and streets, especially, where high exposure and high hazard categories coincide.
+```
 
-Character count: ___ / 500.
+Character count: 202 / 500.
 
 <!-- field: quotation-end -->
 ### End of quotation (optional - use when quoting beginning and end of a longer passage, max. 500 characters) (textarea, optional)
@@ -57,8 +57,10 @@ phrase here. Leave empty for a single short quote.
 Why this quote matters and what the replication tests. Connect the paper's claim to the work this repo does. Don't repeat the quote.
 
 ```
-
+Headline result of Vogelbacher et al. (2026) for their building-level pluvial flood risk framework. We test it as a computational reproduction: the authors' own example (synthetic data for a Hamburg city quarter, 37 buildings, Zenodo 10.5281/zenodo.19860733) recomputed with an open, non-ArcGIS implementation (FAIR2Adapt urban_pfr toolbox), and compared building by building with the authors' ArcGIS output and risk classes. Scope is that example only: not real city data, other cities or other rainfall scenarios. I co-wrote parts of that toolbox, so the reproduction is not fully independent.
 ```
+
+Character count: 595 / 800.
 
 ## Publication note
 
