@@ -1,0 +1,213 @@
+{
+  "schema_version": "1.0",
+  "kind": "forrt-chain-draft",
+  "chain_shape": "paper-rooted",
+  "source": {
+    "repository": "https://github.com/annefou/hamburg-pluvial-flood-replication",
+    "commit": "6669123a20f1787c17ef3e2ae19b2f588b131595",
+    "figure": "figures/main_result.png"
+  },
+  "steps": [
+    {
+      "step": "01_quote",
+      "template_key": "ANNOTATE_QUOTATION",
+      "template_uri": "https://w3id.org/np/RA24onqmqTMsraJ7ypYFOuckmNWpo4Zv5gsLqhXt7xYPU",
+      "prefill": {
+        "paper": "10.5194/nhess-26-2765-2026",
+        "quotation": "The application of the pluvial flood risk toolbox revealed higher risks for buildings in close vicinity to flooded areas and streets, especially, where high exposure and high hazard categories coincide.",
+        "comment": "Headline result of Vogelbacher et al. (2026) for their building-level pluvial flood risk framework. We test it as a computational reproduction: the authors' own example (synthetic data for a Hamburg city quarter, 37 buildings, Zenodo 10.5281/zenodo.19860733) recomputed with an independent open implementation, written from the paper and the authors' scripts instead of ArcGIS, and compared building by building with the authors' ArcGIS output and risk classes. Scope is that example only: not real city data, other cities or other rainfall scenarios."
+      },
+      "provenance": {
+        "paper": "CITATION.cff",
+        "quotation": "nanopubs/drafts/01_quote.md",
+        "comment": "nanopubs/drafts/01_quote.md"
+      },
+      "published_uri": null
+    },
+    {
+      "step": "02_aida",
+      "template_key": "AIDA_SENTENCE",
+      "template_uri": "https://w3id.org/np/RALmXhDw3rHcMveTgbv8VtWxijUHwnSqhCmtJFIPKWVaA",
+      "prefill": {
+        "aida": "Building-level pluvial flood risk is highest for buildings close to flooded areas and streets where high exposure and high flood hazard coincide.",
+        "topic": [
+          {
+            "uri": "http://www.wikidata.org/entity/Q15909735",
+            "label": "urban flooding"
+          },
+          {
+            "uri": "http://www.wikidata.org/entity/Q2288778",
+            "label": "flood risk"
+          }
+        ]
+      },
+      "provenance": {
+        "aida": "nanopubs/drafts/02_aida.md",
+        "topic": "nanopubs/drafts/02_aida.md + Wikidata"
+      },
+      "published_uri": null
+    },
+    {
+      "step": "03_claim",
+      "template_key": "FORRT_CLAIM",
+      "template_uri": "https://w3id.org/np/RAZWyM8D16ya3S1zhCvrG1f0iSpd9-8onVWp0FTvvX7LQ",
+      "prefill": {
+        "claim": "pluvial-flood-risk-exposure-hazard-coincidence",
+        "label": "Building-level pluvial flood risk highest where exposure and flood hazard coincide",
+        "forrtType": "https://w3id.org/sciencelive/o/terms/descriptive_pattern-FORRT-Claim",
+        "source": "https://doi.org/10.5194/nhess-26-2765-2026"
+      },
+      "provenance": {
+        "claim": "nanopubs/drafts/03_claim.md",
+        "label": "nanopubs/drafts/03_claim.md",
+        "forrtType": "nanopubs/drafts/03_claim.md",
+        "source": "CITATION.cff"
+      },
+      "manual": [
+        "forrtType"
+      ],
+      "published_uri": null
+    },
+    {
+      "step": "04_study",
+      "template_key": "FORRT_REPLICATION",
+      "template_uri": "https://w3id.org/np/RAuLEjPp-4dTvPwMkfHggTto1CgjIftiGRAgHlyeEonjQ",
+      "prefill": {
+        "study": "vogelbacher2026-pfr-independent-reproduction",
+        "label": "Independent open reproduction of building-level pluvial flood risk (Vogelbacher et al. 2026, Hamburg example)",
+        "type": "https://w3id.org/sciencelive/o/terms/Reproduction-Study",
+        "scope": "Whether the building-level pluvial flood risk of the paper's framework, and the pattern that risk is highest for buildings close to flooded areas and streets where exposure and hazard coincide, is reproduced from the authors' published inputs. In scope: the authors' worked example as deposited on Zenodo (version 2, the version the paper cites): synthetic building-level data for a Hamburg city quarter (37 buildings), the 100-year design rainfall scenario, flood depths 30-100 cm; every intermediate index (sensitivity, coping capacity, social vulnerability, exposure, both hazard indices), both risk indices and the five risk classes shown in the paper's maps. Out of scope: real city-wide data, other cities, other rainfall scenarios, the sensitivity analysis of Sect. 4.3, and the population disaggregation tool, which the paper states it does not use.",
+        "methodology": "An independent implementation in Python (geopandas, shapely, scipy), written from the paper's Sect. 3 and the authors' exported scripts on Zenodo (CC BY 4.0), without ArcGIS and without other existing implementations. Inputs are the authors' layers from their ArcGIS layer package. Social vulnerability: TOPSIS for sensitivity (children, elderly singles), coping capacity (welfare recipients, school leavers without diploma) and their combination, each multiplied by the Shannon-entropy index, then the flood-sensitivity transformation (SV + mean/4)^2. Exposure: residents per building and per ground floor as given in the authors' input layer. Hazard to well-being: for each depth 30-100 cm, the flooded fraction of a 2 m ring around each building, passed through a log-normal CDF (sigma 0.25, x4) and summed. Hazard to mobility: the maximum of the flooded fraction of a 5 m ring and of the street area within the 0-15 m and 15-30 m rings at 30 cm, through the same CDF. Risk: social vulnerability x exposure x hazard (Eqs. 14-15). Risk classes: the authors' iterated-mean rule. Every index is compared building by building with the authors' ArcGIS output layer, and the classes with the classes that rule gives on the authors' values. The run is a Snakemake pipeline from download to figures.",
+        "deviation": "(1) Tools: open Python instead of ArcGIS Pro, so this is a reproduction with different tools. (2) Where the paper and the authors' results disagree, the implementation follows the results and the authors' scripts: TOPSIS uses vector normalisation (scripts) rather than the sum of Eq. 4; sensitivity weights are children 0.3 and elderly singles 0.7 (Eq. 2 and the results), while the text of Sect. 3.1.1 gives 0.7 and 0.3; the entropy factor is applied in all three TOPSIS steps. (3) Hazard rings exclude every building footprint, not only the building's own, as the authors' stored intermediate fractions require; the paper mentions this only for semi-detached houses. (4) Buffers are drawn in the coordinate system of the authors' buildings (Web Mercator), as in their data; fractions are ratios, so area units cancel. (5) The number of iterations of the class rule (three) is inferred from the paper's four non-zero risk classes. (6) For comparison only, the FAIR2Adapt urban_pfr toolbox (an existing open implementation) is also run as is; I co-wrote parts of it. It is not used to compute the reproduced results.",
+        "keywordSelection": [
+          {
+            "uri": "http://www.wikidata.org/entity/Q5460077",
+            "label": "flood risk assessment"
+          },
+          {
+            "uri": "http://www.wikidata.org/entity/Q581445",
+            "label": "social vulnerability"
+          },
+          {
+            "uri": "http://www.wikidata.org/entity/Q1235853",
+            "label": "TOPSIS"
+          },
+          {
+            "uri": "http://www.wikidata.org/entity/Q1425625",
+            "label": "reproducibility"
+          },
+          {
+            "uri": "http://www.wikidata.org/entity/Q15909735",
+            "label": "urban flooding"
+          }
+        ],
+        "disciplineSelection": {
+          "uri": "http://www.wikidata.org/entity/Q42250",
+          "label": "hydrology"
+        }
+      },
+      "provenance": {
+        "study": "nanopubs/drafts/04_study.md",
+        "label": "nanopubs/drafts/04_study.md",
+        "type": "nanopubs/drafts/04_study.md",
+        "scope": "nanopubs/drafts/04_study.md",
+        "methodology": "nanopubs/drafts/04_study.md",
+        "deviation": "nanopubs/drafts/04_study.md",
+        "keywordSelection": "nanopubs/drafts/04_study.md + Wikidata",
+        "disciplineSelection": "nanopubs/drafts/04_study.md + Wikidata"
+      },
+      "manual": [
+        "type"
+      ],
+      "published_uri": null
+    },
+    {
+      "step": "05_outcome",
+      "template_key": "FORRT_REPLICATION_OUTCOME",
+      "template_uri": "https://w3id.org/np/RA2zljn0Nw9SadppOyxZoh-_Rxosslrq-vYG-p9SttnJE",
+      "prefill": {
+        "outcome": "vogelbacher2026-pfr-independent-reproduction-outcome",
+        "label": "Building-level pluvial flood risk of Vogelbacher et al. (2026) reproduced with an independent open implementation",
+        "repo": "https://doi.org/10.5281/zenodo.23270558",
+        "date": "2026-10-08",
+        "validationStatus": "https://w3id.org/sciencelive/o/terms/Validated",
+        "conclusion": "Validated. On the authors' own example, an independent open implementation reproduces the paper's building-level pluvial flood risk and its pattern: every building falls in the same risk class as in the authors' ArcGIS results, for both risk to well-being and risk to mobility and accessibility, and the highest risks are where high exposure and high hazard coincide, as the paper states. Reproducing the numbers required following the authors' results and scripts where they differ from the paper's text (sensitivity weights, TOPSIS normalisation, and rings that exclude neighbouring buildings). An existing open implementation run as is does not reproduce them, mainly because it recomputes exposure and keeps neighbouring footprints in the hazard rings.",
+        "evidence": "Compared building by building with the authors' ArcGIS output (Zenodo 10.5281/zenodo.19860733, 37 buildings): sensitivity, coping capacity, social vulnerability and its transformed index match exactly (largest difference 4.4e-16); exposure is taken as published. Hazard to mobility differs by at most 0.0008 and hazard to well-being by at most 0.0016; risk to mobility by at most 0.013 and risk to well-being by at most 0.004. With the authors' iterated-mean class rule, 37 of 37 buildings are in the same class for both indices (well-being: 15 no risk, 13 low, 5 medium, 3 high, 1 very high; mobility: 6, 23, 5, 2, 1), with class breaks equal to three decimals. The authors' stored intermediate fractions for the 2 m ring (37 buildings x 8 depths) are matched within 0.05 percentage points when all building footprints are removed from the ring, against up to 27.8 percentage points (25 cells) when only the building's own footprint is. The authors' risk indices equal social vulnerability x published exposure x hazard to 1e-15. For comparison, the FAIR2Adapt urban_pfr toolbox run as is differs by up to 7.86 (risk to mobility) and 5.11 (risk to well-being).",
+        "confidenceLevel": "https://w3id.org/sciencelive/o/terms/HighConfidence",
+        "limitations": "Tested on one worked example only: synthetic building-level data for one Hamburg city quarter (37 buildings) and one rainfall scenario, as published by the authors; this does not test real city data, other cities or the transferability the paper discusses, nor the sensitivity analysis of Sect. 4.3. The remaining differences, in the fourth decimal of the hazard and risk indices, are attributed to ArcGIS geometry processing (snapping tolerance, true curves); finer buffer arcs and intersecting in the flood layers' coordinate system did not remove them. Three method details were inferred from the authors' results and exported scripts because the paper's text differs: the sensitivity weights (results: children 0.3, elderly singles 0.7; text of Sect. 3.1.1: 0.7 and 0.3), the TOPSIS normalisation (scripts: vector norm; Eq. 4: sum), and the exclusion of all building footprints from the hazard rings; the number of class iterations (three) is inferred too. Buffers follow the authors' Web Mercator units, so a 2 m buffer is about 1.2 m on the ground. The authors' exported Python scripts need ArcGIS (arcpy). I co-wrote parts of the FAIR2Adapt toolbox used for comparison, which is reported in its issue #2."
+      },
+      "provenance": {
+        "outcome": "nanopubs/drafts/05_outcome.md",
+        "label": "nanopubs/drafts/05_outcome.md",
+        "repo": "CITATION.cff",
+        "date": "CITATION.cff",
+        "validationStatus": "nanopubs/drafts/05_outcome.md",
+        "conclusion": "nanopubs/drafts/05_outcome.md",
+        "evidence": "nanopubs/drafts/05_outcome.md",
+        "confidenceLevel": "nanopubs/drafts/05_outcome.md",
+        "limitations": "nanopubs/drafts/05_outcome.md"
+      },
+      "manual": [
+        "validationStatus",
+        "confidenceLevel"
+      ],
+      "published_uri": null
+    },
+    {
+      "step": "06_citation",
+      "template_key": "CITATION_CITO",
+      "template_uri": "https://w3id.org/np/RA43F9EoOuzF0xoNUnCMNyFsfIqlsuWDdPHCnN0wCdCAw",
+      "prefill": {
+        "st02": [
+          {
+            "cites": "http://purl.org/spar/cito/confirms",
+            "cited": "https://doi.org/10.5194/nhess-26-2765-2026"
+          },
+          {
+            "cites": "http://purl.org/spar/cito/citesAsDataSource",
+            "cited": "https://doi.org/10.5281/zenodo.19860733"
+          },
+          {
+            "cites": "http://purl.org/spar/cito/citesAsDataSource",
+            "cited": "https://doi.org/10.5281/zenodo.17986182"
+          },
+          {
+            "cites": "http://purl.org/spar/cito/citesAsRelated",
+            "cited": "https://github.com/FAIR2Adapt/urban_pfr_toolbox_hamburg/tree/eb651ebf3b38f444d0180af0a95807bc00326015"
+          }
+        ]
+      },
+      "provenance": {
+        "st02": "cites = nanopubs/drafts/06_citation.md; cited = CITATION.cff references[article]; further rows = nanopubs/drafts/06_citation.md"
+      },
+      "published_uri": null
+    }
+  ],
+  "carry_forward": [
+    {
+      "from": "01_quote",
+      "into": "02_aida",
+      "field": "project"
+    },
+    {
+      "from": "02_aida",
+      "into": "03_claim",
+      "field": "aida"
+    },
+    {
+      "from": "03_claim",
+      "into": "04_study",
+      "field": "claim"
+    },
+    {
+      "from": "04_study",
+      "into": "05_outcome",
+      "field": "study"
+    },
+    {
+      "from": "05_outcome",
+      "into": "06_citation",
+      "field": "work"
+    }
+  ]
+}
