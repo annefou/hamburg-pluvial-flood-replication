@@ -67,7 +67,7 @@ LABELS = {"PFR_WB": "Risk to well-being (PFR$_{WB}$)",
 
 # %%
 a = pd.read_csv(RESULTS / "per_building_v2_A_toolbox_exposure.csv")
-c = pd.read_csv(RESULTS / "per_building_v2_C_authors_ring_rule.csv")
+c = pd.read_csv(RESULTS / "per_building_v2_C_independent.csv")
 cls = pd.read_csv(RESULTS / "risk_classes_per_building_v2_C.csv")
 
 fig, axes = plt.subplots(1, 2, figsize=(10, 4.6))
@@ -78,11 +78,11 @@ for ax, field in zip(axes, ("PFR_WB", "PFR_MA")):
     ax.scatter(a[f"{field}_ref"], a[f"{field}_port"], s=46, color=TOOLBOX,
                edgecolor="#fcfcfb", linewidth=1.5, zorder=2, label="Toolbox as is (A)")
     ax.scatter(c[f"{field}_ref"], c[f"{field}_port"], s=46, color=OURS,
-               edgecolor="#fcfcfb", linewidth=1.5, zorder=3, label="Reproduction (C)")
+               edgecolor="#fcfcfb", linewidth=1.5, zorder=3, label="Independent reproduction (C)")
     same = int((cls[f"{field}_class_ref"] == cls[f"{field}_class_ours"]).sum())
     maxdiff = float((c[f"{field}_port"] - c[f"{field}_ref"]).abs().max())
-    ax.text(0.03, 0.97, f"Reproduction: max |difference| {maxdiff:.3f}\n"
-                        f"same risk class: {same}/{len(cls)} buildings",
+    ax.text(0.03, 0.97, f"(C) max |difference| {maxdiff:.3f}\n"
+                        f"(C) same risk class: {same}/{len(cls)}",
             transform=ax.transAxes, va="top", color=INK, fontsize=9)
     ax.set_xlim(0, top); ax.set_ylim(0, top)
     ax.set_xlabel("Authors (ArcGIS, Zenodo v2)")

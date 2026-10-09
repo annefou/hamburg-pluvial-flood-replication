@@ -137,33 +137,73 @@ port_b.to_csv(RESULTS / "port_output_published_exposure.csv", index=False)
 print(f"scenario B: {len(port_b)} buildings, exposure from RB/RBG")
 
 # %% [markdown]
-# ### Scenario C — hazards with the authors' ring rule
+# ### Scenario C — an independent open implementation
 #
-# Scenarios A and B leave a residual in both hazard indices (HWB, HMA) for the
-# buildings that have a neighbour within 2 m. The authors' own intermediates
-# (v1: flooded area `A2Flood_*` and fraction `P2Flood_*` per depth, 5-m
-# fraction `F30P5m`) show why: their rings exclude **every** building
-# footprint, not only the building's own (see Sect. 4.2 on semi-detached
-# houses, and section 6 below). The toolbox excludes only the building's own
-# footprint.
+# Everything in scenario C is computed by the code in this notebook, written
+# from the paper (Sect. 3) and the authors' exported scripts (Zenodo, CC BY 4.0),
+# with no code from the FAIR2Adapt toolbox. The toolbox appears only in
+# scenarios A and B, as the comparison.
 #
-# Scenario C keeps the toolbox's social vulnerability, takes exposure as
-# published (as in B), and recomputes both hazards here with the authors' ring
-# rule; risk then follows the paper's Eqs. 14–15 with unit exponents:
-# PFR_WB = SV_PF · E_WB · HWB and PFR_MA = SV_PF · E_MA · HMA.
+# **Social vulnerability** — as in the authors' step-1 scripts: TOPSIS with
+# vector normalisation (each attribute divided by sqrt of the sum of squares,
+# then multiplied by its weight; the paper's Eq. 4 shows a sum instead),
+# closeness = distance to the minimum / (distance to the minimum + distance to
+# the maximum), multiplied by the Shannon-entropy index U = 2 + Σ p ln p / ln n
+# of the building's weighted values (U = 2 when any value is zero), then
+# SV_PF = (SV + 0.25 · mean SV)². Weights: sensitivity = children 0.3, elderly
+# singles 0.7; coping capacity = welfare recipients 0.5, school leavers without
+# diploma 0.5; SVI = sensitivity 0.5, coping capacity 0.5. The sensitivity
+# weights are those of the paper's Eq. 2 and of the authors' results; the
+# paper's text (Sect. 3.1.1) gives them the other way round (children 0.7).
 #
-# Everything else is the paper's method as the toolbox implements it:
+# **Exposure** — as published (`RB`/`RBG`), as in scenario B.
+#
+# **Hazards** — with the authors' ring rule. Scenarios A and B leave a residual
+# in both hazard indices for buildings with a neighbour within 2 m; the authors'
+# v1 intermediates (`A2Flood_*`, `P2Flood_*`, `F30P5m`) show that their rings
+# exclude **every** building footprint, not only the building's own (section 6).
 # HWB = Σ over depths 30–100 cm of lognorm.cdf(4 · flooded fraction of the 2-m
-# ring, s = 0.25); HMA = lognorm.cdf(4 · max(f5, f15, f30), s = 0.25), where f5 is
+# ring, s = 0.25); HMA = lognorm.cdf(4 · max(f5, f15, f30), s = 0.25), with f5
 # the flooded fraction of the 5-m ring and f15, f30 the flooded fraction of the
 # street area inside the 0–15 m and 15–30 m rings, at 30 cm. Buffers are drawn
 # in EPSG:3857 units, as the authors' data are.
+#
+# **Risk** — Eqs. 14–15 with unit exponents: PFR_WB = SV_PF · E_WB · HWB and
+# PFR_MA = SV_PF · E_MA · HMA.
 
 # %%
 from scipy.stats import lognorm
 from shapely.ops import unary_union
 
 SHAPE = 0.25
+
+
+def topsis(values: np.ndarray, weights: list[float], entropy: bool = True) -> np.ndarray:
+    """Closeness to the worst case, as in the authors' step-1 scripts."""
+    x = np.nan_to_num(np.asarray(values, float))
+    w = np.asarray(weights, float)
+    norm = np.sqrt((x ** 2).sum(axis=0))
+    z = np.divide(x, norm, out=np.zeros_like(x), where=norm > 0) * w
+    d_max = np.sqrt(((z - z.max(axis=0)) ** 2).sum(axis=1))
+    d_min = np.sqrt(((z - z.min(axis=0)) ** 2).sum(axis=1))
+    total = d_max + d_min
+    closeness = np.divide(d_min, total, out=np.zeros_like(total), where=total != 0)
+    if not entropy:
+        return closeness
+    u = np.full(len(z), 2.0)
+    complete = (z != 0).all(axis=1)
+    p = z[complete] / z[complete].sum(axis=1, keepdims=True)
+    u[complete] = 2 + (p * np.log(p)).sum(axis=1) / np.log(z.shape[1])
+    return closeness * u
+
+
+def social_vulnerability(b: pd.DataFrame) -> pd.DataFrame:
+    sensitivity = topsis(b[["C", "ES"]], [0.3, 0.7])
+    coping = topsis(b[["WR", "EDQ"]], [0.5, 0.5])
+    svi = topsis(np.column_stack([sensitivity, coping]), [0.5, 0.5])
+    return pd.DataFrame({"ID": b["ID"].astype(int).values, "Sensitivity": sensitivity,
+                         "CopingCapacity": coping, "SVI": svi,
+                         "SVPF": (svi + 0.25 * svi.mean()) ** 2})
 
 
 def rings_without_buildings(footprints: gpd.GeoSeries, distance: float) -> gpd.GeoSeries:
@@ -200,10 +240,14 @@ def hazards_authors_rule(src: Path, crs: str = "EPSG:3857") -> pd.DataFrame:
 
 
 hz = hazards_authors_rule(src)
-port_c = port_b.drop(columns=["HMA", "HWB", "PFRMA", "PFRWB"]).merge(hz[["ID", "HMA", "HWB"]], on="ID")
+inputs = gpd.read_file(src, layer="buildings").drop(columns="geometry")
+port_c = (social_vulnerability(inputs)
+          .merge(published_exposure.rename(columns={"RB": "R", "RBG": "R_G"}), on="ID")
+          .merge(hz[["ID", "HMA", "HWB"]], on="ID"))
+port_c[["R", "R_G"]] = port_c[["R", "R_G"]].astype(float)
 port_c["PFRMA"] = port_c["SVPF"] * port_c["R"] * port_c["HMA"]
 port_c["PFRWB"] = port_c["SVPF"] * port_c["R_G"] * port_c["HWB"]
-port_c.to_csv(RESULTS / "port_output_authors_ring_rule.csv", index=False)
+port_c.to_csv(RESULTS / "output_independent.csv", index=False)
 print(f"scenario C: {len(port_c)} buildings")
 
 # %% [markdown]
@@ -272,7 +316,7 @@ def compare(ref: pd.DataFrame, version: str, port: pd.DataFrame,
 
 
 SCENARIOS = {"A_toolbox_exposure": port, "B_published_exposure": port_b,
-             "C_authors_ring_rule": port_c}
+             "C_independent": port_c}
 summaries = []
 for scenario, run_output in SCENARIOS.items():
     for version, ref in refs.items():
@@ -313,7 +357,7 @@ def risk_class(values, breaks) -> np.ndarray:
 
 
 CLASS_NAMES = ["no risk", "low", "medium", "high", "very high"]
-c_v2 = pd.read_csv(RESULTS / "per_building_v2_C_authors_ring_rule.csv")
+c_v2 = pd.read_csv(RESULTS / "per_building_v2_C_independent.csv")
 class_rows = []
 per_building_classes = pd.DataFrame({"ID": c_v2["ID"].astype(int)})
 for field in ("PFR_WB", "PFR_MA"):

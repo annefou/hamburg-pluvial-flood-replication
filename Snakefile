@@ -58,7 +58,7 @@ rule analysis:
         f"{RESULTS}/comparison.csv",
         f"{RESULTS}/authors_formula_check.csv",
         f"{RESULTS}/per_building_v2_A_toolbox_exposure.csv",
-        f"{RESULTS}/per_building_v2_C_authors_ring_rule.csv",
+        f"{RESULTS}/per_building_v2_C_independent.csv",
         f"{RESULTS}/risk_classes_v2_C.csv",
         f"{RESULTS}/risk_classes_per_building_v2_C.csv",
         f"{RESULTS}/ring_rule_cells.csv",
@@ -73,7 +73,7 @@ rule analysis:
 rule figures:
     input:
         f"{RESULTS}/per_building_v2_A_toolbox_exposure.csv",
-        f"{RESULTS}/per_building_v2_C_authors_ring_rule.csv",
+        f"{RESULTS}/per_building_v2_C_independent.csv",
         f"{RESULTS}/risk_classes_per_building_v2_C.csv",
         f"{RESULTS}/ring_rule_cells.csv",
         f"{DATA}/interim/v2/example.gpkg",
