@@ -47,3 +47,13 @@ https://platform.sciencelive4all.org/np/?uri=<full-URI>
 **green**, 12/12 checks passed — every step reachable, the Outcome's archived version DOI
 resolves, the cited DOI resolves, and the Outcome's verdict (Validated) agrees with the
 CiTO relation (confirms) on the quoted paper.
+
+## Geographical coverage of the original paper (standalone, not a chain step)
+
+Published from the Logroño replication (annefou/logrono-pluvial-flood-replication), which
+documents the same paper; geometry generated there by `scripts/geo_coverage_wkt.py`.
+
+| Location | URI | Published | Status |
+|---|---|---|---|
+| Hamburg, Germany (mainland, from OSM relation 62782) | https://w3id.org/sciencelive/np/RA1NTaGnBgz1AFkx-Xbpl8FLq16t6wINM-XyP4PrsXnK8 | 2026-10-10 | current |
+| Hamburg, Germany (first attempt, bounding box) | https://w3id.org/sciencelive/np/RAXrw7VYNnaHeaIrX4hJsOCJ7Aqy17nbt77LRzP9WOQWc | 2026-10-10 | superseded, retraction pending |
