@@ -56,4 +56,4 @@ documents the same paper; geometry generated there by `scripts/geo_coverage_wkt.
 | Location | URI | Published | Status |
 |---|---|---|---|
 | Hamburg, Germany (mainland, from OSM relation 62782) | https://w3id.org/sciencelive/np/RA1NTaGnBgz1AFkx-Xbpl8FLq16t6wINM-XyP4PrsXnK8 | 2026-10-10 | current |
-| Hamburg, Germany (first attempt, bounding box) | https://w3id.org/sciencelive/np/RAXrw7VYNnaHeaIrX4hJsOCJ7Aqy17nbt77LRzP9WOQWc | 2026-10-10 | superseded, retraction pending |
+| Hamburg, Germany (first attempt, bounding box) | https://w3id.org/sciencelive/np/RAXrw7VYNnaHeaIrX4hJsOCJ7Aqy17nbt77LRzP9WOQWc | 2026-10-10 | superseded; disapproved by the author (https://w3id.org/np/RA6ME0ZiWgCCxdZTHq6qZoO3PsemLCJ1_g7p_vsNJqysw) |
