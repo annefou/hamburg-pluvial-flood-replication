@@ -46,6 +46,8 @@ import json
 from pathlib import Path
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 # %%
 RAW_DIR = Path("../data/raw")
@@ -68,6 +70,14 @@ RECORDS = {
     ]},
 }
 
+# Zenodo intermittently answers 429/5xx (504 Gateway Time-out, empty bodies);
+# retry with backoff so a transient outage doesn't fail the whole pipeline.
+SESSION = requests.Session()
+SESSION.mount("https://", HTTPAdapter(max_retries=Retry(
+    total=6, backoff_factor=5, status_forcelist=(429, 500, 502, 503, 504),
+    allowed_methods=("GET",), respect_retry_after_header=True,
+)))
+
 
 # %%
 def _digest(path: Path, algo: str) -> str:
@@ -84,7 +94,7 @@ def download(entry: dict, dest: Path) -> Path:
     out = dest / entry["key"]
     algo, expected = entry["checksum"].split(":", 1)
     if not (out.exists() and _digest(out, algo) == expected):
-        with requests.get(entry["links"]["self"], stream=True, timeout=300) as r:
+        with SESSION.get(entry["links"]["self"], stream=True, timeout=300) as r:
             r.raise_for_status()
             with open(out, "wb") as f:
                 for chunk in r.iter_content(chunk_size=1 << 16):
@@ -101,7 +111,9 @@ def download(entry: dict, dest: Path) -> Path:
 # %%
 log = {}
 for version, rec in RECORDS.items():
-    record = requests.get(f"https://zenodo.org/api/records/{rec['id']}", timeout=60).json()
+    resp = SESSION.get(f"https://zenodo.org/api/records/{rec['id']}", timeout=60)
+    resp.raise_for_status()
+    record = resp.json()
     files = {f["key"]: f for f in record["files"]}
     missing = [k for k in rec["files"] if k not in files]
     assert not missing, f"not in Zenodo record {rec['id']}: {missing}"

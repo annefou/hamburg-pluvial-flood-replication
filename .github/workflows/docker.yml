@@ -109,13 +109,13 @@ jobs:
             local what="$1"; shift
             local out code
             out=$(curl -sS -w '\n__HTTP__%{http_code}' "$@") || {
-              echo "::error::${what}: could not reach Zenodo."
+              echo "::error::${what}: could not reach Zenodo." >&2
               exit 1
             }
             code=${out##*__HTTP__}
             out=${out%$'\n'__HTTP__*}
             if [ "${code}" -lt 200 ] || [ "${code}" -ge 300 ]; then
-              echo "::error::${what} failed (HTTP ${code}). Zenodo said: ${out}"
+              echo "::error::${what} failed (HTTP ${code}). Zenodo said: ${out}" >&2
               exit 1
             fi
             printf '%s' "${out}"
